@@ -1,0 +1,1 @@
+const s="/assets/slice-annotation-large-BMgELH_L.png",a="/assets/slice-annotation-BYMGWVwS.png",n="/assets/slice-app-PoRtkkeP.jpg",t="/assets/slice-background-bar-DUyfyeHo.jpg";export{t as a,a as b,s as c,n as s};
