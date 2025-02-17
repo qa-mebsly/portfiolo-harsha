@@ -1,38 +1,17 @@
-import {
-  vitePlugin as remix,
-  cloudflareDevProxyVitePlugin as remixCloudflareDevProxy,
-} from '@remix-run/dev';
-import { defineConfig } from 'vite';
-import jsconfigPaths from 'vite-jsconfig-paths';
-import mdx from '@mdx-js/rollup';
-import remarkFrontmatter from 'remark-frontmatter';
-import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
-import rehypeImgSize from 'rehype-img-size';
-import rehypeSlug from 'rehype-slug';
-import rehypePrism from '@mapbox/rehype-prism';
+/// <reference types="vitest" />
+/// <reference types="vite/client" />
+
+import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import glsl from 'vite-plugin-glsl'; // GLSL plugin
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  assetsInclude: ['**/*.glb', '**/*.hdr', '**/*.glsl'],
-  build: {
-    assetsInlineLimit: 1024,
+  plugins: [react(), tsconfigPaths(), glsl()], // Add GLSL plugin
+  assetsInclude: ['**/*.glb', '**/*.hdr', '**/*.glsl'], // Ensure GLSL files are included
+  test: {
+    globals: true,
+    environment: 'happy-dom',
+    setupFiles: ['./test/setup-test-env.ts'],
   },
-  server: {
-    port: 7777,
-  },
-  plugins: [
-    mdx({
-      rehypePlugins: [[rehypeImgSize, { dir: 'public' }], rehypeSlug, rehypePrism],
-      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
-      providerImportSource: '@mdx-js/react',
-    }),
-    remixCloudflareDevProxy(),
-    remix({
-      routes(defineRoutes) {
-        return defineRoutes(route => {
-          route('/', 'routes/home/route.js', { index: true });
-        });
-      },
-    }),
-    jsconfigPaths(),
-  ],
 });
